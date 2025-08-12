@@ -28,6 +28,12 @@ class HostelDetailScreen extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Hostel approved successfully')),
           );
+        } else if (state is HostelRejected && state.hostelId == hostel.id) {
+          Navigator.pop(context);
+          context.read<HostelBloc>().add(FetchHostelsData());
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Hostel rejected successfully')),
+          );
         } else if (state is HostelError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
@@ -49,10 +55,7 @@ class HostelDetailScreen extends StatelessWidget {
                     children: [
                       HostelFacilityNameSection(hostel: hostel),
                       DescriptionPreviewSection(
-                        description: hostel.description,
-                        ownerName: hostel.ownerName,
-                        contactNumber: hostel.contactNumber,
-                        smallImageUrls: hostel.smallImageUrls,
+                        hostel: hostel,
                       ),
                       ReviewRoomSection(hostel: hostel),
                       Row(
@@ -74,7 +77,11 @@ class HostelDetailScreen extends StatelessWidget {
                         name: 'Reject',
                         color: Colors.redAccent,
                         onPressed: () {
-                          // TODO: Implement delete functionality
+                          if (hostel.approved) {
+                            context
+                                .read<HostelBloc>()
+                                .add(HostelReject(hostel.id));
+                          }
                         },
                       ),
                     ],

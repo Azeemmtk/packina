@@ -18,80 +18,90 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               children: [
                 const HomeCustomAppbarWidget(),
+                height10,
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.all(padding),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // First row: 2 cards
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                                  child: BuildStatusCard(
-                                    icon: Icons.people_alt_outlined,
-                                    value: '20',
-                                    label: 'Hostels',
-                                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // First row: 2 cards
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5.0, vertical: 5.0),
+                                child: BuildStatusCard(
+                                  icon: Icons.people_alt_outlined,
+                                  value: '20',
+                                  label: 'Hostels',
                                 ),
                               ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                                  child: BuildStatusCard(
-                                    icon: Icons.person,
-                                    value: '400',
-                                    label: 'Reports',
-                                  ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5.0, vertical: 5.0),
+                                child: BuildStatusCard(
+                                  icon: Icons.person,
+                                  value: '400',
+                                  label: 'Reports',
                                 ),
                               ),
-                            ],
-                          ),
-                          // Second row: 2 cards
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                                  child: BuildStatusCard(
-                                    icon: Icons.person,
-                                    value: '20',
-                                    label: 'Blocked Hostel',
-                                    pending: true,
-                                  ),
+                            ),
+                          ],
+                        ),
+                        // Second row: 2 cards
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5.0, vertical: 5.0),
+                                child: BuildStatusCard(
+                                  icon: Icons.person,
+                                  value: '20',
+                                  label: 'Blocked Hostel',
+                                  pending: true,
                                 ),
                               ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                                  child: BuildStatusCard(
-                                    icon: Icons.money,
-                                    value: '40000',
-                                    label: 'Active users',
-                                  ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5.0, vertical: 5.0),
+                                child: BuildStatusCard(
+                                  icon: Icons.money,
+                                  value: '40000',
+                                  label: 'Active users',
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.all(padding),
-                  child: CustomGreenButtonWidget(name: 'Manage hostels', onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HostelScreen(),));
-                  },),
+                  child: CustomGreenButtonWidget(
+                    name: 'Manage hostels',
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HostelScreen(),
+                          ));
+                    },
+                  ),
                 ),
                 SizedBox(
-                  height: height * 0.2,
+                  height: height * 0.1,
                 )
               ],
             ),

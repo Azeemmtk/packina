@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../core/constants/colors.dart';
 import '../../../../../../core/constants/const.dart';
-import '../../../../../auth/presentation/screens/sign_in_screen.dart';
 
 class HomeCustomAppbarWidget extends StatelessWidget {
   const HomeCustomAppbarWidget({super.key});
@@ -13,11 +11,11 @@ class HomeCustomAppbarWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: secondaryColor,
         borderRadius: BorderRadius.only(
-          bottomRight: Radius.circular(width * 0.1),
+          bottomRight: Radius.circular(width * 0.05),
         ),
       ),
       child: Padding(
-        padding: EdgeInsets.all(padding),
+        padding: EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

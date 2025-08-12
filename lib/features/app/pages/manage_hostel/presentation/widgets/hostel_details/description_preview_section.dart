@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:packina/features/app/pages/manage_hostel/domain/entity/hostel_entity.dart';
 import 'package:packina/features/app/pages/manage_hostel/presentation/widgets/hostel_details/preview_image_container_widget.dart';
 import '../../../../../../../core/constants/colors.dart';
 import '../../../../../../../core/constants/const.dart';
 import '../../../../../../../core/widgets/title_text_widget.dart';
+import 'contact_reach_widget.dart';
 
 class DescriptionPreviewSection extends StatelessWidget {
-  final String description;
-  final String ownerName;
-  final String contactNumber;
-  final List<String> smallImageUrls;
+
+  final HostelEntity hostel;
 
   const DescriptionPreviewSection({
     super.key,
-    required this.description,
-    required this.ownerName,
-    required this.contactNumber,
-    required this.smallImageUrls,
+    required this.hostel,
   });
 
   @override
@@ -27,10 +24,12 @@ class DescriptionPreviewSection extends StatelessWidget {
         const TitleTextWidget(title: 'Description'),
         height10,
         Text(
-          description,
+          hostel.description,
           style: const TextStyle(fontSize: 16),
         ),
-        height10,
+        height20,
+        ContactReachWidget(hostel: hostel,),
+        height20,
         RichText(
           text: TextSpan(
             style: TextStyle(fontSize: 18, color: headingTextColor),
@@ -40,7 +39,7 @@ class DescriptionPreviewSection extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               TextSpan(
-                text: ownerName.isEmpty ? 'Unknown' : ownerName,
+                text: hostel.ownerName.isEmpty ? 'Unknown' : hostel.ownerName,
                 style: TextStyle(color: customGrey),
               ),
             ],
@@ -56,7 +55,7 @@ class DescriptionPreviewSection extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               TextSpan(
-                text: contactNumber,
+                text: hostel.contactNumber,
                 style: TextStyle(color: customGrey),
               ),
             ],
@@ -70,7 +69,7 @@ class DescriptionPreviewSection extends StatelessWidget {
           children: List.generate(
             3,
                 (index) => PreviewImageContainerWidget(
-              imageUrl: index < smallImageUrls.length ? smallImageUrls[index] : null,
+              imageUrl: index < hostel.smallImageUrls.length ? hostel.smallImageUrls[index] : null,
             ),
           ),
         ),

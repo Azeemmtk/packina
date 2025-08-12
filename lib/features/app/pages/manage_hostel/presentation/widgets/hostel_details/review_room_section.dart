@@ -13,11 +13,6 @@ class ReviewRoomSection extends StatelessWidget {
   });
 
   final HostelEntity hostel;
-
-  // 'type': 'Ac',
-  // 'count': 7,
-  // 'rate': 2500.0,
-
   @override
   Widget build(BuildContext context) {
     return Column(

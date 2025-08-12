@@ -5,5 +5,6 @@ import 'package:packina/features/app/pages/manage_hostel/domain/entity/hostel_en
 abstract class HostelRepository{
   Future<Either<Failure, List<HostelEntity>>> getHostelData();
   Future<Either<Failure, String>> approveHostel(String hostelId);
+  Future<Either<Failure, String>> rejectHostel(String hostelId);
 
 }

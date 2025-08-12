@@ -8,6 +8,7 @@ import '../model/hostel_model.dart';
 abstract class HostelRemoteDataSource {
   Future<Either<Failure, List<HostelEntity>>> getHostelData();
   Future<Either<Failure, String>> approveHostel(String hostelId);
+  Future<Either<Failure, String>> rejectHostel(String hostelId);
 }
 
 class HostelRemoteDataSourceImpl implements HostelRemoteDataSource {
@@ -33,6 +34,17 @@ class HostelRemoteDataSourceImpl implements HostelRemoteDataSource {
     try{
       await firestore.collection('hostels').doc(hostelId).
       update({'approved':true});
+      return Right(hostelId);
+    } catch (e){
+      return Left(ServerFailure('Failed to approve hostel: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> rejectHostel(String hostelId) async{
+    try{
+      await firestore.collection('hostels').doc(hostelId).
+      update({'approved':false});
       return Right(hostelId);
     } catch (e){
       return Left(ServerFailure('Failed to approve hostel: $e'));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../../../core/constants/colors.dart';
 import '../../../../../../core/constants/const.dart';
@@ -52,11 +53,31 @@ class CustomMyHostelCard extends StatelessWidget {
                   topLeft: Radius.circular(12),
                   topRight: Radius.circular(12),
                 ),
-                child: Image.network(
+                child:
+                Image.network(
                   imageUrl,
                   width: double.infinity,
                   height: size.height * 0.3,
                   fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      // Image loaded → fade in
+                      return AnimatedOpacity(
+                        opacity: 1.0,
+                        duration: const Duration(milliseconds: 300),
+                        child: child,
+                      );
+                    }
+                    return Shimmer.fromColors(
+                      baseColor: secondaryColor,
+                      highlightColor: mainColor,
+                      direction: ShimmerDirection.ltr,
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: size.height * 0.3,
+                      ),
+                    );
+                  },
                   errorBuilder: (context, error, stackTrace) => Container(
                     height: 170,
                     color: textFieldColor,

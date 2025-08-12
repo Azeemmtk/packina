@@ -18,3 +18,12 @@ final class HostelApprove extends HostelEvent {
   @override
   List<Object?> get props => [hostelId];
 }
+
+final class HostelReject extends HostelEvent {
+  final String hostelId;
+
+  const HostelReject(this.hostelId);
+
+  @override
+  List<Object?> get props => [hostelId];
+}

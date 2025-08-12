@@ -34,3 +34,12 @@ final class HostelApproved extends HostelState {
   @override
   List<Object?> get props => [hostelId];
 }
+
+final class HostelRejected extends HostelState {
+  final String hostelId;
+
+  const HostelRejected(this.hostelId);
+
+  @override
+  List<Object?> get props => [hostelId];
+}

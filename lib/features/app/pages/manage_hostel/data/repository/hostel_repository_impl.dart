@@ -18,4 +18,9 @@ class HostelRepositoryImpl implements HostelRepository {
   Future<Either<Failure, String>> approveHostel(String hostelId) async{
     return await hostelRemoteDataSource.approveHostel(hostelId);
   }
+
+  @override
+  Future<Either<Failure, String>> rejectHostel(String hostelId) async{
+    return await hostelRemoteDataSource.rejectHostel(hostelId);
+  }
 }

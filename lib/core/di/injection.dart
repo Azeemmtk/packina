@@ -7,6 +7,7 @@ import 'package:packina/features/app/pages/manage_hostel/data/repository/hostel_
 import 'package:packina/features/app/pages/manage_hostel/domain/repository/hostel_repository.dart';
 import 'package:packina/features/app/pages/manage_hostel/domain/usecases/approve_hostel.dart';
 import 'package:packina/features/app/pages/manage_hostel/domain/usecases/get_hostel_data.dart';
+import 'package:packina/features/app/pages/manage_hostel/domain/usecases/reject_hostel.dart';
 import 'package:packina/features/app/pages/manage_hostel/presentation/provider/bloc/hostel_bloc.dart';
 
 final getIt = GetIt.instance;
@@ -14,29 +15,34 @@ final getIt = GetIt.instance;
 Future<void> initializeDependencies() async {
   // External Dependencies
   getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
-  getIt.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
+  getIt.registerLazySingleton<FirebaseFirestore>(
+      () => FirebaseFirestore.instance);
 
   // Data Sources
   getIt.registerLazySingleton<HostelRemoteDataSource>(
-        () => HostelRemoteDataSourceImpl(getIt<FirebaseFirestore>(),
+    () => HostelRemoteDataSourceImpl(
+      getIt<FirebaseFirestore>(),
     ),
   );
 
   // Repositories
   getIt.registerLazySingleton<HostelRepository>(
-        () => HostelRepositoryImpl(getIt<HostelRemoteDataSource>(),
+    () => HostelRepositoryImpl(
+      getIt<HostelRemoteDataSource>(),
     ),
   );
 
   // Use Cases
   getIt.registerLazySingleton(() => GetHostelData(getIt<HostelRepository>()));
   getIt.registerLazySingleton(() => ApproveHostel(getIt<HostelRepository>()));
+  getIt.registerLazySingleton(() => RejectHostel(getIt<HostelRepository>()));
 
   // BLoCs
   getIt.registerFactory(
-        () => HostelBloc(
+    () => HostelBloc(
       getHostelData: getIt<GetHostelData>(),
       approveHostel: getIt<ApproveHostel>(),
+      rejectHostel: getIt<RejectHostel>(),
     ),
   );
 }
