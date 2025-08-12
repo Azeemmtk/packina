@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:packina/core/error/failures.dart';
+import 'package:packina/core/utils/enums.dart';
 import 'package:packina/features/app/pages/manage_hostel/domain/entity/hostel_entity.dart';
 
 import '../model/hostel_model.dart';
@@ -33,7 +34,7 @@ class HostelRemoteDataSourceImpl implements HostelRemoteDataSource {
   Future<Either<Failure, String>> approveHostel(String hostelId) async {
     try{
       await firestore.collection('hostels').doc(hostelId).
-      update({'approved':true});
+      update({'status':Status.approved.value});
       return Right(hostelId);
     } catch (e){
       return Left(ServerFailure('Failed to approve hostel: $e'));
@@ -44,7 +45,7 @@ class HostelRemoteDataSourceImpl implements HostelRemoteDataSource {
   Future<Either<Failure, String>> rejectHostel(String hostelId) async{
     try{
       await firestore.collection('hostels').doc(hostelId).
-      update({'approved':false});
+      update({'status':Status.rejected.value});
       return Right(hostelId);
     } catch (e){
       return Left(ServerFailure('Failed to approve hostel: $e'));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:packina/core/utils/enums.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../../../core/constants/colors.dart';
@@ -14,7 +15,7 @@ class CustomMyHostelCard extends StatelessWidget {
     required this.rent,
     required this.rating,
     required this.distance,
-    required this.approved, // New field
+    required this.status,
   });
 
   final String imageUrl;
@@ -23,11 +24,33 @@ class CustomMyHostelCard extends StatelessWidget {
   final int rent;
   final double rating;
   final int distance;
-  final bool approved; // New field
+  final Status status;
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+
+    Color badgeColor;
+    String badgeText;
+
+    switch (status) {
+      case Status.approved:
+        badgeColor = mainColor;
+        badgeText = 'Approved';
+        break;
+      case Status.pending:
+        badgeColor = Colors.orange;
+        badgeText = 'Pending';
+        break;
+      case Status.blocked:
+        badgeColor = Colors.grey;
+        badgeText = 'Blocked';
+        break;
+      case Status.rejected:
+        badgeColor = Colors.red;
+        badgeText = 'Rejected';
+        break;
+    }
     return Container(
       width: double.infinity,
       height: height * 0.5,
@@ -53,8 +76,7 @@ class CustomMyHostelCard extends StatelessWidget {
                   topLeft: Radius.circular(12),
                   topRight: Radius.circular(12),
                 ),
-                child:
-                Image.network(
+                child: Image.network(
                   imageUrl,
                   width: double.infinity,
                   height: size.height * 0.3,
@@ -89,13 +111,14 @@ class CustomMyHostelCard extends StatelessWidget {
                 top: 8,
                 right: 8,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: approved ? Colors.green : Colors.red,
+                    color: badgeColor,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    approved ? 'Approved' : 'Pending',
+                    badgeText,
                     style: const TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ),

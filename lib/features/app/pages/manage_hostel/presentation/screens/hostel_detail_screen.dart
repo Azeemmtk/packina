@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:packina/core/utils/enums.dart';
 import 'package:packina/features/app/pages/manage_hostel/domain/entity/hostel_entity.dart';
 import 'package:packina/features/app/pages/manage_hostel/presentation/provider/bloc/hostel_bloc.dart';
 import '../../../../../../core/constants/const.dart';
@@ -65,7 +66,7 @@ class HostelDetailScreen extends StatelessWidget {
                       CustomGreenButtonWidget(
                         name: 'Approve',
                         onPressed: () {
-                          if (!hostel.approved) {
+                          if (hostel.status != Status.approved) {
                             context
                                 .read<HostelBloc>()
                                 .add(HostelApprove(hostel.id));
@@ -77,7 +78,7 @@ class HostelDetailScreen extends StatelessWidget {
                         name: 'Reject',
                         color: Colors.redAccent,
                         onPressed: () {
-                          if (hostel.approved) {
+                          if (hostel.status != Status.rejected) {
                             context
                                 .read<HostelBloc>()
                                 .add(HostelReject(hostel.id));

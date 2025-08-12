@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:packina/core/utils/enums.dart';
 
 class HostelEntity extends Equatable {
   final String id;
@@ -17,7 +18,7 @@ class HostelEntity extends Equatable {
   final List<String> smallImageUrls;
   final List<String> smallImagePublicIds;
   final DateTime createdAt;
-  final bool approved; // New field
+  final Status status;
 
   const HostelEntity({
     required this.id,
@@ -36,7 +37,7 @@ class HostelEntity extends Equatable {
     required this.smallImageUrls,
     required this.smallImagePublicIds,
     required this.createdAt,
-    required this.approved, // New field
+    required this.status,
   });
 
   @override
@@ -57,6 +58,6 @@ class HostelEntity extends Equatable {
     smallImageUrls,
     smallImagePublicIds,
     createdAt,
-    approved, // New field
+    status,
   ];
 }
