@@ -3,7 +3,6 @@ import 'package:dartz/dartz.dart';
 import 'package:packina/core/error/failures.dart';
 import 'package:packina/core/utils/enums.dart';
 import 'package:packina/features/app/pages/manage_hostel/domain/entity/hostel_entity.dart';
-
 import '../model/hostel_model.dart';
 
 abstract class HostelRemoteDataSource {
