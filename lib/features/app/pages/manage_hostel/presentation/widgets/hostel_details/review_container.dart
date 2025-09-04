@@ -1,66 +1,66 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../../../../core/constants/colors.dart';
 import '../../../../../../../core/constants/const.dart';
+import '../../../domain/entity/review_entity.dart';
 
 class ReviewContainer extends StatelessWidget {
-  const ReviewContainer({
-    super.key,
-  });
+  final ReviewEntity review;
+
+  const ReviewContainer({super.key, required this.review});
 
   @override
   Widget build(BuildContext context) {
-    final Size size= MediaQuery.of(context).size;
-    return Column(
-      children: [
-        Row(
-          children: [
-            CircleAvatar(
-              radius: 17,
-              child: Icon(Icons.person,),
-            ),
-            width5,
-            Text(
-              'Azeem Ali',
-              style: TextStyle(color: headingTextColor,fontSize: 17,),
-            ),
-            width10,
-            Icon(Icons.star,color: CupertinoColors.systemYellow,),
-            width5,
-            Icon(Icons.star,color: CupertinoColors.systemYellow,),
-            width5,
-            Icon(Icons.star,color: CupertinoColors.systemYellow,),
-            width5,
-            Icon(Icons.star,color: CupertinoColors.systemYellow,),
-            width5,
-          ],
-        ),
-        Row(
-          children: [
-            SizedBox(
-                width: 35
-            ),
-            Container(
-              width: size.width * 0.8,
-              decoration: BoxDecoration(
-                  color: textFieldColor,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                  )
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey[300]!),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundImage:
+                review.userImageUrl != null ? NetworkImage(review.userImageUrl!) : null,
+                child: review.userImageUrl == null
+                    ? const Icon(Icons.person, size: 20)
+                    : null,
               ),
-              child: Padding(
-                padding: EdgeInsets.all(6),
-                child: Text('Neat rooms, has washing machine, fridge, iron box',
-                  style: TextStyle(fontSize: 16),),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      review.userName,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Row(
+                      children: List.generate(5, (index) {
+                        return Icon(
+                          index < review.rating ? Icons.star : Icons.star_border,
+                          color: Colors.yellow[700],
+                          size: 16,
+                        );
+                      }),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        )
-      ],
+            ],
+          ),
+          height10,
+          Text(review.comment),
+          height10,
+          Text(
+            '${review.createdAt.day}/${review.createdAt.month}/${review.createdAt.year}',
+            style: TextStyle(color: Colors.grey[600], fontSize: 12),
+          ),
+        ],
+      ),
     );
   }
 }
-
