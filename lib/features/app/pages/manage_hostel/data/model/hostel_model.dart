@@ -23,6 +23,7 @@ class HostelModel extends HostelEntity{
     required super.smallImagePublicIds,
     required super.createdAt,
     required super.status,
+    super.rating,
   });
 
   factory HostelModel.fromEntity( HostelEntity entity) {
@@ -44,6 +45,7 @@ class HostelModel extends HostelEntity{
       smallImagePublicIds: entity.smallImagePublicIds,
       createdAt: entity.createdAt,
       status: entity.status, // New field
+      rating: entity.rating,
     );
   }
 
@@ -66,6 +68,7 @@ class HostelModel extends HostelEntity{
       'smallImagePublicIds': smallImagePublicIds,
       'createdAt': Timestamp.fromDate(createdAt),
       'status': status.value,
+      'rating':rating,
     };
   }
 
@@ -88,6 +91,7 @@ class HostelModel extends HostelEntity{
       smallImagePublicIds: smallImagePublicIds,
       createdAt: createdAt,
       status: status,
+      rating: rating,
     );
   }
 
@@ -109,7 +113,8 @@ class HostelModel extends HostelEntity{
       smallImageUrls: List<String>.from(json['smallImageUrls']),
       smallImagePublicIds: List<String>.from(json['smallImagePublicIds']),
       createdAt: (json['createdAt'] as Timestamp).toDate(),
-      status: StatusExtension.fromString(json['status'] ?? 'pending')
+      status: StatusExtension.fromString(json['status'] ?? 'pending'),
+      rating: json['rating'] != null ? (json['rating'] as num).toDouble() : null,
     );
   }
 }

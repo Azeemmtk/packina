@@ -1,12 +1,8 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:packina/features/auth/presentation/screens/welcome_screen.dart';
 import '../../../../core/constants/const.dart';
-import '../../../app/pages/home/presentation/screen/home_screen.dart';
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

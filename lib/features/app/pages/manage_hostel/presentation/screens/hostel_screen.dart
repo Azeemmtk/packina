@@ -80,7 +80,7 @@ class HostelScreen extends StatelessWidget {
                                   title: hostel.name,
                                   location: hostel.placeName,
                                   rent: hostel.rooms[0]['rate'],
-                                  rating: 5.0,
+                                  rating: hostel.rating ?? 0.0,
                                   distance: 0,
                                   status: hostel.status,
                                 ),
