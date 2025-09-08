@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:packina/core/widgets/custom_green_button_widget.dart';
+import 'package:packina/features/app/pages/manage_report/presentation/screens/report_screen.dart';
 import '../../../../../../core/constants/const.dart';
 import '../../../manage_hostel/presentation/screens/hostel_screen.dart';
 import '../widgets/build_status_card.dart';
@@ -14,13 +15,15 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: Colors.grey[100],
       body: Column(
         children: [
+          const HomeCustomAppbarWidget(),
           Expanded(
-            child: Column(
-              children: [
-                const HomeCustomAppbarWidget(),
-                height10,
-                Expanded(
-                  child: Padding(
+            child: Padding(
+              padding: EdgeInsets.all(padding),
+              child: Column(
+                children: [
+
+                  height10,
+                  Padding(
                     padding: EdgeInsets.all(10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -86,10 +89,8 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(padding),
-                  child: CustomGreenButtonWidget(
+                  height20,
+                  CustomGreenButtonWidget(
                     name: 'Manage hostels',
                     onPressed: () {
                       Navigator.push(
@@ -99,11 +100,19 @@ class HomeScreen extends StatelessWidget {
                           ));
                     },
                   ),
-                ),
-                SizedBox(
-                  height: height * 0.1,
-                )
-              ],
+                  height20,
+                  CustomGreenButtonWidget(
+                    name: 'Manage Reports',
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ReportScreen(),
+                          ));
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ],

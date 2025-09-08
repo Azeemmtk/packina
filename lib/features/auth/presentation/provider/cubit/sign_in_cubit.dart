@@ -1,53 +1,45 @@
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import '../../../../../core/utils/validators.dart';
+
+import '../../../../../app_state.dart';
+
 part 'sign_in_state.dart';
 
 class SignInCubit extends Cubit<SignInState> {
-  SignInCubit() : super(const SignInInitial());
+  SignInCubit() : super(SignInInitial());
 
   String _email = '';
   String _password = '';
 
   void updateEmail(String email) {
     _email = email;
-    _validate();
+    emit(SignInInitial());
   }
 
   void updatePassword(String password) {
     _password = password;
-    _validate();
+    emit(SignInInitial());
   }
 
-  void _validate() {
-    final emailError = Validation.validateName(_email);
-    final passwordError = Validation.validatePassword(_password);
-    emit(SignInError(emailError: emailError, passwordError: passwordError));
-  }
+  void submit(BuildContext context) async {
+    emit(SignInSubmitting());
+    try {
+      // Hardcoded admin credentials check
+      const String hardcodedUsername = "admin";
+      const String hardcodedPassword = "admin123";
 
-  void submit(BuildContext context) {
-    final emailError = Validation.validateName(_email);
-    final passwordError = Validation.validatePassword(_password);
-
-    if (emailError == null && passwordError == null) {
-      if (_email == 'admin123' && _password == '123456') {
-        emit(const SignInSubmitting());
-        Future.delayed(const Duration(seconds: 1), () {
-          emit(const SignInSuccess());
-        });
+      if (_email == hardcodedUsername && _password == hardcodedPassword) {
+        AppState.isAdmin = true; // Set admin state
+        emit(SignInSuccess());
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Email or password is incorrect'),
-            backgroundColor: Colors.red,
-            duration: Duration(seconds: 3),
-          ),
-        );
-        emit(const SignInError(emailError: 'Invalid credentials', passwordError: 'Invalid credentials'));
+        emit(SignInError(
+          emailError: _email != hardcodedUsername ? "Invalid username" : null,
+          passwordError: _password != hardcodedPassword ? "Invalid password" : null,
+        ));
       }
-    } else {
-      emit(SignInError(emailError: emailError, passwordError: passwordError));
+    } catch (e) {
+      emit(SignInError(emailError: null, passwordError: e.toString()));
     }
   }
 }

@@ -1,14 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:packina/features/app/pages/home/presentation/screen/home_screen.dart';
+
 import '../../../../core/widgets/custom_green_button_widget.dart';
-import '../../../app/pages/home/presentation/screen/home_screen.dart';
 import '../provider/cubit/sign_in_cubit.dart';
 import '../widgets/curved_container_widget.dart';
 import '../widgets/custom_auth_input_widget.dart';
 
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +34,7 @@ class SignInScreen extends StatelessWidget {
                           title: 'User name',
                           hint: 'Enter User name',
                           icon: CupertinoIcons.mail,
-                          controller: TextEditingController(),
+                          controller: _usernameController,
                           errorText: state is SignInError ? state.emailError : null,
                           onChanged: (value) {
                             context.read<SignInCubit>().updateEmail(value);
@@ -46,7 +50,7 @@ class SignInScreen extends StatelessWidget {
                           hint: 'Enter password',
                           isSecure: true,
                           icon: CupertinoIcons.lock,
-                          controller: TextEditingController(),
+                          controller: _passwordController,
                           errorText: state is SignInError ? state.passwordError : null,
                           onChanged: (value) {
                             context.read<SignInCubit>().updatePassword(value);

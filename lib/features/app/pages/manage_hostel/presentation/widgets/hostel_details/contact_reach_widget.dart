@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:packina/app_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../../../core/constants/colors.dart';
 import '../../../../../../../core/constants/const.dart';
+import '../../../../../../../core/di/injection.dart';
+import '../../../../chat/domain/usecases/create_chat_use_case.dart';
+import '../../../../chat/domain/usecases/get_owner_details_use_case.dart';
+import '../../../../chat/presentation/screens/individual_chat_screen.dart';
 import '../../../domain/entity/hostel_entity.dart';
 
 class ContactReachWidget extends StatelessWidget {
@@ -20,18 +25,52 @@ class ContactReachWidget extends StatelessWidget {
         _buildContainer(
           text: 'Message',
           icon: Icons.message,
-          onPressed: () {
+          onPressed: () async {
+            AppState.isAdmin= true;
+            final createChatUseCase = getIt<CreateChatUseCase>();
+            final getOwnerDetailUseCase = getIt<GetOwnerDetailsUseCase>();
+
+            // Fetch owner details
+            final ownerResult = await getOwnerDetailUseCase(GetOwnerDetailsParams(userId: hostel.ownerId,));
+            await ownerResult.fold(
+                  (failure) async {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('1${failure.message}')),
+                );
+              },
+                  (ownerDetails) async {
+                    print(hostel.ownerId);
+                final chatResult = await createChatUseCase(CreateChatParams(userId: hostel.ownerId));
+                chatResult.fold(
+                      (failure) => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('2${failure.message}')),
+                  ),
+                      (chatId) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => IndividualChatScreen(
+                          chatId: chatId,
+                          otherName: ownerDetails['displayName']!,
+                          otherPhoto: ownerDetails['photoURL']!,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            );
           },
         ),
         _buildContainer(
           text: 'Call',
           icon: Icons.call,
-          onPressed: () async{
+          onPressed: () async {
             final Uri telUri = Uri(scheme: 'tel', path: hostel.contactNumber);
 
             await launchUrl(
-            telUri,
-            mode: LaunchMode.externalApplication,
+              telUri,
+              mode: LaunchMode.externalApplication,
             );
           },
         ),
@@ -39,7 +78,6 @@ class ContactReachWidget extends StatelessWidget {
           text: 'Direction',
           icon: Icons.location_on_outlined,
           onPressed: () async {
-
             final Uri googleMapsUrl = Uri.parse(
                 'https://www.google.com/maps/dir/?api=1&destination=${hostel.latitude},${hostel.longitude}');
 
@@ -47,7 +85,6 @@ class ContactReachWidget extends StatelessWidget {
               googleMapsUrl,
               mode: LaunchMode.externalApplication,
             );
-
           },
         ),
       ],

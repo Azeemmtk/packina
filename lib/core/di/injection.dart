@@ -2,6 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart' as google_sign_in_package;
+import 'package:packina/features/app/pages/chat/data/datasource/chat_remote_data_source.dart';
+import 'package:packina/features/app/pages/chat/data/datasource/owner_remote_data_source.dart';
+import 'package:packina/features/app/pages/chat/data/repository/chat_repository_impl.dart';
+import 'package:packina/features/app/pages/chat/data/repository/owner_repository_impl.dart';
+import 'package:packina/features/app/pages/chat/domain/repository/chat_repository.dart';
+import 'package:packina/features/app/pages/chat/domain/repository/owner_repository.dart';
+import 'package:packina/features/app/pages/chat/domain/usecases/create_chat_use_case.dart';
+import 'package:packina/features/app/pages/chat/domain/usecases/get_chats_use_case.dart';
+import 'package:packina/features/app/pages/chat/domain/usecases/get_messages_use_case.dart';
+import 'package:packina/features/app/pages/chat/domain/usecases/get_owner_details_use_case.dart';
+import 'package:packina/features/app/pages/chat/domain/usecases/send_message_use_case.dart';
+import 'package:packina/features/app/pages/chat/presentation/providers/bloc/allchats/all_chat_bloc.dart';
+import 'package:packina/features/app/pages/chat/presentation/providers/bloc/chat/chat_bloc.dart';
 import 'package:packina/features/app/pages/manage_hostel/data/datasource/hostel_remote_data_source.dart';
 import 'package:packina/features/app/pages/manage_hostel/data/datasource/review_remote_data_source.dart';
 import 'package:packina/features/app/pages/manage_hostel/data/repository/hostel_repository_impl.dart';
@@ -14,16 +27,22 @@ import 'package:packina/features/app/pages/manage_hostel/domain/usecases/get_rev
 import 'package:packina/features/app/pages/manage_hostel/domain/usecases/reject_hostel.dart';
 import 'package:packina/features/app/pages/manage_hostel/presentation/provider/bloc/hostel_bloc.dart';
 import 'package:packina/features/app/pages/manage_hostel/presentation/provider/bloc/review/review_bloc.dart';
+import 'package:packina/features/app/pages/manage_report/data/datasource/report_data_source.dart';
+import 'package:packina/features/app/pages/manage_report/data/repository/report_repository_impl.dart';
+import 'package:packina/features/app/pages/manage_report/domain/repository/report_repository.dart';
+import 'package:packina/features/app/pages/manage_report/domain/usecases/fetch_report_usecase.dart';
+import 'package:packina/features/app/pages/manage_report/domain/usecases/update_report_status_usecase.dart';
+import 'package:packina/features/app/pages/manage_report/presentation/provider/bloc/report/report_bloc.dart';
 
 final getIt = GetIt.instance;
 
 Future<void> initializeDependencies() async {
-  // External Dependencies
+  /// External Dependencies
   getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   getIt.registerLazySingleton<FirebaseFirestore>(
       () => FirebaseFirestore.instance);
 
-  // Data Sources
+  /// Data Sources
   getIt.registerLazySingleton<HostelRemoteDataSource>(
     () => HostelRemoteDataSourceImpl(
       getIt<FirebaseFirestore>(),
@@ -36,7 +55,25 @@ Future<void> initializeDependencies() async {
     ),
   );
 
-  // Repositories
+  getIt.registerLazySingleton<ChatRemoteDataSource>(
+        () => ChatRemoteDataSourceImpl(
+      getIt<FirebaseFirestore>(),
+    ),
+  );
+  getIt.registerLazySingleton<OwnerRemoteDataSource>(
+        () => OwnerRemoteDataSourceImpl(
+      getIt<FirebaseFirestore>(),
+    ),
+  );
+
+  //report
+  getIt.registerLazySingleton<ReportDataSource>(
+        () => ReportDataSourceImpl(
+      firestore:  getIt<FirebaseFirestore>(),
+    ),
+  );
+
+  /// Repositories
   getIt.registerLazySingleton<HostelRepository>(
     () => HostelRepositoryImpl(
       getIt<HostelRemoteDataSource>(),
@@ -49,14 +86,43 @@ Future<void> initializeDependencies() async {
     ),
   );
 
-  // Use Cases
+  getIt.registerLazySingleton<ChatRepository>(
+        () => ChatRepositoryImpl(
+      getIt<ChatRemoteDataSource>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<OwnerRepository>(
+        () => OwnerRepositoryImpl(
+      getIt<OwnerRemoteDataSource>(),
+    ),
+  );
+
+  //report
+  getIt.registerLazySingleton<ReportRepository>(
+        () => ReportRepositoryImpl(
+      dataSource: getIt<ReportDataSource>()
+    ),
+  );
+
+  /// Use Cases
   getIt.registerLazySingleton(() => GetHostelData(getIt<HostelRepository>()));
   getIt.registerLazySingleton(() => ApproveHostel(getIt<HostelRepository>()));
   getIt.registerLazySingleton(() => RejectHostel(getIt<HostelRepository>()));
 
   getIt.registerLazySingleton(() => GetReviewsUseCase(getIt<ReviewRepository>()));
 
-  // BLoCs
+  getIt.registerLazySingleton(() => CreateChatUseCase(getIt<ChatRepository>()));
+  getIt.registerLazySingleton(() => GetChatsUseCase(getIt<ChatRepository>()));
+  getIt.registerLazySingleton(() => GetMessagesUseCase(getIt<ChatRepository>()));
+  getIt.registerLazySingleton(() => GetOwnerDetailsUseCase(getIt<OwnerRepository>()));
+  getIt.registerLazySingleton(() => SendMessageUseCase(getIt<ChatRepository>()));
+
+  //report
+  getIt.registerLazySingleton(() => FetchReportsUseCase(getIt<ReportRepository>()));
+
+  getIt.registerLazySingleton(() => UpdateReportStatusUseCase(getIt<ReportRepository>()));
+  /// BLoCs
   getIt.registerFactory(
     () => HostelBloc(
       getHostelData: getIt<GetHostelData>(),
@@ -69,4 +135,28 @@ Future<void> initializeDependencies() async {
       getReviewsUseCase: getIt<GetReviewsUseCase>(),
     ),
   );
+
+  getIt.registerFactory(
+        () => AllChatBloc(
+          getIt<GetChatsUseCase>(),
+    ),
+  );
+
+  getIt.registerFactoryParam<ChatBloc, String, void>(
+        (chatId, _) => ChatBloc(
+      getMessagesUseCase: getIt<GetMessagesUseCase>(),
+      sendMessageUseCase: getIt<SendMessageUseCase>(),
+      chatId: chatId,
+    ),
+  );
+
+
+  //report
+  getIt.registerFactory(
+        () => ReportBloc(
+      fetchReportsUseCase: getIt<FetchReportsUseCase>(),
+          updateReportStatusUseCase: getIt<UpdateReportStatusUseCase>()
+    ),
+  );
+
 }

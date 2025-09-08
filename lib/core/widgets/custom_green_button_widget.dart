@@ -30,6 +30,7 @@ class CustomGreenButtonWidget extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          minimumSize: const Size(100, 50), // Ensure a reasonable minimum size
         ),
         child: isLoading
             ? const SizedBox(
