@@ -30,7 +30,6 @@ class SignInCubit extends Cubit<SignInState> {
       const String hardcodedPassword = "admin123";
 
       if (_email == hardcodedUsername && _password == hardcodedPassword) {
-        AppState.isAdmin = true; // Set admin state
         emit(SignInSuccess());
       } else {
         emit(SignInError(

@@ -34,9 +34,7 @@ class AllChatScreen extends StatelessWidget {
                       itemCount: state.chats.length,
                       itemBuilder: (context, index) {
                         final chat = state.chats[index];
-                        final currentUid = AppState.isAdmin
-                            ? AppState.adminUid
-                            : FirebaseAuth.instance.currentUser!.uid;
+                        final currentUid = AppState.adminUid ;
                         final otherUid = chat.participants.firstWhere(
                               (id) => id != currentUid,
                           orElse: () => currentUid, // Fallback to avoid errors

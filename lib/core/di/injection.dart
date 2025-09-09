@@ -15,6 +15,11 @@ import 'package:packina/features/app/pages/chat/domain/usecases/get_owner_detail
 import 'package:packina/features/app/pages/chat/domain/usecases/send_message_use_case.dart';
 import 'package:packina/features/app/pages/chat/presentation/providers/bloc/allchats/all_chat_bloc.dart';
 import 'package:packina/features/app/pages/chat/presentation/providers/bloc/chat/chat_bloc.dart';
+import 'package:packina/features/app/pages/home/data/datasource/dashboard_remote_data_source.dart';
+import 'package:packina/features/app/pages/home/data/repository/dashboard_repository_impl.dart';
+import 'package:packina/features/app/pages/home/domain/repository/dashboard_repository.dart';
+import 'package:packina/features/app/pages/home/domain/usecases/fetch_dashboard_data_use_case.dart';
+import 'package:packina/features/app/pages/home/presentation/provide/bloc/dashboard/dashboard_bloc.dart';
 import 'package:packina/features/app/pages/manage_hostel/data/datasource/hostel_remote_data_source.dart';
 import 'package:packina/features/app/pages/manage_hostel/data/datasource/review_remote_data_source.dart';
 import 'package:packina/features/app/pages/manage_hostel/data/repository/hostel_repository_impl.dart';
@@ -73,6 +78,13 @@ Future<void> initializeDependencies() async {
     ),
   );
 
+  //dashboard
+  getIt.registerLazySingleton<DashboardRemoteDataSource>(
+        () => DashboardRemoteDataSourceImpl(
+      firestore:  getIt<FirebaseFirestore>(),
+    ),
+  );
+
   /// Repositories
   getIt.registerLazySingleton<HostelRepository>(
     () => HostelRepositoryImpl(
@@ -105,6 +117,11 @@ Future<void> initializeDependencies() async {
     ),
   );
 
+  //dashboard
+  getIt.registerLazySingleton<DashboardRepository>(
+        () => DashboardRepositoryImpl(getIt<DashboardRemoteDataSource>()),
+  );
+
   /// Use Cases
   getIt.registerLazySingleton(() => GetHostelData(getIt<HostelRepository>()));
   getIt.registerLazySingleton(() => ApproveHostel(getIt<HostelRepository>()));
@@ -122,6 +139,13 @@ Future<void> initializeDependencies() async {
   getIt.registerLazySingleton(() => FetchReportsUseCase(getIt<ReportRepository>()));
 
   getIt.registerLazySingleton(() => UpdateReportStatusUseCase(getIt<ReportRepository>()));
+
+  //dashboard
+  getIt.registerLazySingleton(() => FetchDashboardDataUseCase(getIt<DashboardRepository>()));
+
+
+
+
   /// BLoCs
   getIt.registerFactory(
     () => HostelBloc(
@@ -156,6 +180,13 @@ Future<void> initializeDependencies() async {
         () => ReportBloc(
       fetchReportsUseCase: getIt<FetchReportsUseCase>(),
           updateReportStatusUseCase: getIt<UpdateReportStatusUseCase>()
+    ),
+  );
+
+  //dashboard
+  getIt.registerFactory(
+        () => DashboardBloc(
+        fetchAdminDashboardDataUseCase: getIt<FetchDashboardDataUseCase>()
     ),
   );
 

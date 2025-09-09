@@ -14,11 +14,13 @@ class IndividualChatScreen extends StatefulWidget {
     required this.chatId,
     required this.otherName,
     required this.otherPhoto,
+    this.initialMessage,
   });
 
   final String chatId;
   final String otherName;
   final String otherPhoto;
+  final String? initialMessage;
 
   @override
   State<IndividualChatScreen> createState() => _IndividualChatScreenState();
@@ -26,6 +28,17 @@ class IndividualChatScreen extends StatefulWidget {
 
 class _IndividualChatScreenState extends State<IndividualChatScreen> {
   final TextEditingController _messageController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialMessage != null && widget.initialMessage!.isNotEmpty) {
+      _messageController.text = widget.initialMessage!;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _sendMessage(context);
+      });
+    }
+  }
 
   void _sendMessage(BuildContext context) {
     if (_messageController.text.trim().isNotEmpty) {
@@ -63,9 +76,7 @@ class _IndividualChatScreenState extends State<IndividualChatScreen> {
                             reverse: true,
                             itemBuilder: (context, index) {
                               final message = state.messages[index];
-                              final currentUid = AppState.isAdmin
-                                  ? AppState.adminUid
-                                  : FirebaseAuth.instance.currentUser!.uid;
+                              final currentUid = AppState.adminUid ;
                               final isMe = message.senderId == currentUid;
                               return ChatMessageSection(message: message, isMe: isMe);
                             },

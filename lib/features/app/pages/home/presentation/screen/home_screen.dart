@@ -1,103 +1,130 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:packina/core/di/injection.dart';
 import 'package:packina/core/widgets/custom_green_button_widget.dart';
+import 'package:packina/core/constants/const.dart';
+import 'package:packina/features/app/pages/home/presentation/widgets/build_status_card.dart';
+import 'package:packina/features/app/pages/home/presentation/widgets/home_custom_appbar_widget.dart';
+import 'package:packina/features/app/pages/manage_hostel/presentation/screens/hostel_screen.dart';
 import 'package:packina/features/app/pages/manage_report/presentation/screens/report_screen.dart';
-import '../../../../../../core/constants/const.dart';
-import '../../../manage_hostel/presentation/screens/hostel_screen.dart';
-import '../widgets/build_status_card.dart';
-import '../widgets/home_custom_appbar_widget.dart';
+import '../provide/bloc/dashboard/dashboard_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      body: Column(
-        children: [
-          const HomeCustomAppbarWidget(),
-          Expanded(
+    return BlocProvider(
+      create: (context) => getIt<DashboardBloc>()..add(FetchDashboardData()),
+      child: Scaffold(
+        backgroundColor: Colors.grey[100],
+        appBar: PreferredSize(
+          preferredSize: Size(double.infinity, height * 0.28),
+          child: HomeCustomAppbarWidget(),
+        ),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            context.read<DashboardBloc>().add(FetchDashboardData());
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Padding(
               padding: EdgeInsets.all(padding),
               child: Column(
                 children: [
-
                   height10,
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // First row: 2 cards
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 5.0, vertical: 5.0),
-                                child: BuildStatusCard(
-                                  icon: Icons.people_alt_outlined,
-                                  value: '20',
-                                  label: 'Hostels',
-                                ),
+                  BlocBuilder<DashboardBloc, DashboardState>(
+                    builder: (context, state) {
+                      if (state is DashboardLoading) {
+                        return const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      } else if (state is DashboardLoaded) {
+                        final data = state.adminDashboardData;
+                        return Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            children: [
+                              // First row
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: BuildStatusCard(
+                                        icon: Icons.people_alt_outlined,
+                                        value: data.hostelsCount.toString(),
+                                        label: 'Hostels',
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: BuildStatusCard(
+                                        icon: Icons.person,
+                                        value: data.pendingReportsCount
+                                            .toString(),
+                                        label: 'Pending Reports',
+                                        pending: true,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 5.0, vertical: 5.0),
-                                child: BuildStatusCard(
-                                  icon: Icons.person,
-                                  value: '400',
-                                  label: 'Reports',
-                                ),
+                              // Second row
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: BuildStatusCard(
+                                        icon: Icons.person,
+                                        value:
+                                        data.blockedHostelsCount.toString(),
+                                        label: 'Blocked Hostels',
+                                        pending: true,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: BuildStatusCard(
+                                        icon: Icons.people,
+                                        value: data.occupantsCount.toString(),
+                                        label: 'Occupants',
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                        // Second row: 2 cards
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 5.0, vertical: 5.0),
-                                child: BuildStatusCard(
-                                  icon: Icons.person,
-                                  value: '20',
-                                  label: 'Blocked Hostel',
-                                  pending: true,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 5.0, vertical: 5.0),
-                                child: BuildStatusCard(
-                                  icon: Icons.money,
-                                  value: '40000',
-                                  label: 'Active users',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                            ],
+                          ),
+                        );
+                      } else if (state is DashboardError) {
+                        return Center(child: Text(state.message));
+                      }
+                      return const Center(child: Text('No data available'));
+                    },
                   ),
                   height20,
                   CustomGreenButtonWidget(
                     name: 'Manage hostels',
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HostelScreen(),
-                          ));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HostelScreen(),
+                        ),
+                      );
                     },
                   ),
                   height20,
@@ -105,17 +132,18 @@ class HomeScreen extends StatelessWidget {
                     name: 'Manage Reports',
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ReportScreen(),
-                          ));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ReportScreen(),
+                        ),
+                      );
                     },
                   ),
                 ],
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

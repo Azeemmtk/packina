@@ -25,16 +25,10 @@ class ChatRemoteDataSourceImpl extends ChatRemoteDataSource {
       String currentName;
       String currentPhoto;
 
-      if (AppState.isAdmin) {
         currentUId = AppState.adminUid;
         currentName = AppState.adminDisplayName;
         currentPhoto = AppState.adminPhotoURL;
-      } else {
-        final currentUser = FirebaseAuth.instance.currentUser!;
-        currentUId = currentUser.uid;
-        currentName = currentUser.displayName ?? 'Unknown';
-        currentPhoto = currentUser.photoURL ?? '';
-      }
+
 
       // Fetch hostel owner
       final otherDoc = await firestore.collection(collection).doc(otherUserId).get();
@@ -73,9 +67,7 @@ class ChatRemoteDataSourceImpl extends ChatRemoteDataSource {
 
   @override
   Stream<List<ChatEntity>> getChats() {
-    final currentUid = AppState.isAdmin
-        ? AppState.adminUid
-        : FirebaseAuth.instance.currentUser!.uid;
+    final currentUid = AppState.adminUid;
     return firestore
         .collection('chats')
         .where('participants', arrayContains: currentUid)
@@ -120,9 +112,7 @@ class ChatRemoteDataSourceImpl extends ChatRemoteDataSource {
   @override
   Future<void> sendMessage(String chatId, String text) async {
     try {
-      final currentUid = AppState.isAdmin
-          ? AppState.adminUid
-          : FirebaseAuth.instance.currentUser!.uid;
+      final currentUid =  AppState.adminUid ;
       final chatRef = firestore.collection('chats').doc(chatId);
       final messageRef = chatRef.collection('messages').doc();
 

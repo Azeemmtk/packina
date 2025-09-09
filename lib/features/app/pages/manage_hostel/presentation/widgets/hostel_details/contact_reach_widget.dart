@@ -26,7 +26,6 @@ class ContactReachWidget extends StatelessWidget {
           text: 'Message',
           icon: Icons.message,
           onPressed: () async {
-            AppState.isAdmin= true;
             final createChatUseCase = getIt<CreateChatUseCase>();
             final getOwnerDetailUseCase = getIt<GetOwnerDetailsUseCase>();
 

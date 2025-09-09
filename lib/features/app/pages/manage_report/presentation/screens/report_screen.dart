@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../../../app_state.dart';
 import '../../../../../../core/di/injection.dart';
 import '../../../../../../core/widgets/custom_app_bar_widget.dart';
 import '../../../../../../core/widgets/custom_green_button_widget.dart';
@@ -48,7 +46,6 @@ class ReportScreen extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Left side: Image, Message, Status, Admin Action
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,7 +118,6 @@ class ReportScreen extends StatelessWidget {
                                 CustomGreenButtonWidget(
                                   name: 'Chat with Owner',
                                   onPressed: () async {
-                                    AppState.isAdmin = true;
                                     final createChatUseCase = getIt<CreateChatUseCase>();
                                     final getOwnerDetailUseCase = getIt<GetOwnerDetailsUseCase>();
 
@@ -170,7 +166,6 @@ class ReportScreen extends StatelessWidget {
                                 CustomGreenButtonWidget(
                                   name: 'Chat with Occupant',
                                   onPressed: () async {
-                                    AppState.isAdmin = true;
                                     final createChatUseCase = getIt<CreateChatUseCase>();
                                     final getOwnerDetailUseCase = getIt<GetOwnerDetailsUseCase>();
 
