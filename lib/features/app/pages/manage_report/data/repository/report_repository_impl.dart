@@ -8,12 +8,9 @@ import '../datasource/report_data_source.dart';
 class ReportRepositoryImpl implements ReportRepository {
   final ReportDataSource dataSource;
 
-
   ReportRepositoryImpl({
     required this.dataSource,
   });
-
-
 
   @override
   Future<Either<Failure, List<ReportEntity>>> fetchReports() async {
@@ -27,7 +24,6 @@ class ReportRepositoryImpl implements ReportRepository {
     }
   }
 
-
   @override
   Future<Either<Failure, bool>> updateReportStatus(String reportId, String status) async {
     try {
@@ -37,6 +33,18 @@ class ReportRepositoryImpl implements ReportRepository {
       return Left(ServerFailure(e.message));
     } catch (e) {
       return Left(ServerFailure('Failed to update report status: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> blockHostel(String hostelId) async {
+    try {
+      final success = await dataSource.blockHostel(hostelId);
+      return Right(success);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure('Failed to block hostel: $e'));
     }
   }
 }

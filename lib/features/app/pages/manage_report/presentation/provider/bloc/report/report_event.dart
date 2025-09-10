@@ -17,3 +17,12 @@ class SubmitReportEvent extends ReportEvent {
 }
 
 class FetchReportsEvent extends ReportEvent {}
+
+class BlockHostelEvent extends ReportEvent {
+  final String hostelId;
+
+  const BlockHostelEvent({required this.hostelId});
+
+  @override
+  List<Object> get props => [hostelId];
+}

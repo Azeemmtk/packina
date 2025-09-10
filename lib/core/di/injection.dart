@@ -21,20 +21,26 @@ import 'package:packina/features/app/pages/home/domain/repository/dashboard_repo
 import 'package:packina/features/app/pages/home/domain/usecases/fetch_dashboard_data_use_case.dart';
 import 'package:packina/features/app/pages/home/presentation/provide/bloc/dashboard/dashboard_bloc.dart';
 import 'package:packina/features/app/pages/manage_hostel/data/datasource/hostel_remote_data_source.dart';
+import 'package:packina/features/app/pages/manage_hostel/data/datasource/occupant_remote_data_source.dart';
 import 'package:packina/features/app/pages/manage_hostel/data/datasource/review_remote_data_source.dart';
 import 'package:packina/features/app/pages/manage_hostel/data/repository/hostel_repository_impl.dart';
+import 'package:packina/features/app/pages/manage_hostel/data/repository/occupant_repository_impl.dart';
 import 'package:packina/features/app/pages/manage_hostel/data/repository/review_repository_impl.dart';
 import 'package:packina/features/app/pages/manage_hostel/domain/repository/hostel_repository.dart';
+import 'package:packina/features/app/pages/manage_hostel/domain/repository/occupant_repository.dart';
 import 'package:packina/features/app/pages/manage_hostel/domain/repository/review_repository.dart';
 import 'package:packina/features/app/pages/manage_hostel/domain/usecases/approve_hostel.dart';
 import 'package:packina/features/app/pages/manage_hostel/domain/usecases/get_hostel_data.dart';
+import 'package:packina/features/app/pages/manage_hostel/domain/usecases/get_occupant_by_hostel_id.dart';
 import 'package:packina/features/app/pages/manage_hostel/domain/usecases/get_review_use_case.dart';
 import 'package:packina/features/app/pages/manage_hostel/domain/usecases/reject_hostel.dart';
 import 'package:packina/features/app/pages/manage_hostel/presentation/provider/bloc/hostel_bloc.dart';
+import 'package:packina/features/app/pages/manage_hostel/presentation/provider/bloc/occupant/occupant_bloc.dart';
 import 'package:packina/features/app/pages/manage_hostel/presentation/provider/bloc/review/review_bloc.dart';
 import 'package:packina/features/app/pages/manage_report/data/datasource/report_data_source.dart';
 import 'package:packina/features/app/pages/manage_report/data/repository/report_repository_impl.dart';
 import 'package:packina/features/app/pages/manage_report/domain/repository/report_repository.dart';
+import 'package:packina/features/app/pages/manage_report/domain/usecases/block_hostel_use_case.dart';
 import 'package:packina/features/app/pages/manage_report/domain/usecases/fetch_report_usecase.dart';
 import 'package:packina/features/app/pages/manage_report/domain/usecases/update_report_status_usecase.dart';
 import 'package:packina/features/app/pages/manage_report/presentation/provider/bloc/report/report_bloc.dart';
@@ -67,6 +73,12 @@ Future<void> initializeDependencies() async {
   );
   getIt.registerLazySingleton<OwnerRemoteDataSource>(
         () => OwnerRemoteDataSourceImpl(
+      getIt<FirebaseFirestore>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<OccupantRemoteDataSource>(
+        () => OccupantRemoteDataSourceImpl(
       getIt<FirebaseFirestore>(),
     ),
   );
@@ -110,6 +122,12 @@ Future<void> initializeDependencies() async {
     ),
   );
 
+  getIt.registerLazySingleton<OccupantRepository>(
+        () => OccupantRepositoryImpl(
+      getIt<OccupantRemoteDataSource>(),
+    ),
+  );
+
   //report
   getIt.registerLazySingleton<ReportRepository>(
         () => ReportRepositoryImpl(
@@ -135,9 +153,11 @@ Future<void> initializeDependencies() async {
   getIt.registerLazySingleton(() => GetOwnerDetailsUseCase(getIt<OwnerRepository>()));
   getIt.registerLazySingleton(() => SendMessageUseCase(getIt<ChatRepository>()));
 
+  getIt.registerLazySingleton(() => GetOccupantsByHostelId(getIt<OccupantRepository>()));
+
   //report
   getIt.registerLazySingleton(() => FetchReportsUseCase(getIt<ReportRepository>()));
-
+  getIt.registerLazySingleton(() => BlockHostelUseCase(getIt<ReportRepository>()));
   getIt.registerLazySingleton(() => UpdateReportStatusUseCase(getIt<ReportRepository>()));
 
   //dashboard
@@ -166,6 +186,12 @@ Future<void> initializeDependencies() async {
     ),
   );
 
+  getIt.registerFactory(
+        () => OccupantBloc(
+      getOccupantsByHostelId: getIt<GetOccupantsByHostelId>(),
+    ),
+  );
+
   getIt.registerFactoryParam<ChatBloc, String, void>(
         (chatId, _) => ChatBloc(
       getMessagesUseCase: getIt<GetMessagesUseCase>(),
@@ -179,6 +205,7 @@ Future<void> initializeDependencies() async {
   getIt.registerFactory(
         () => ReportBloc(
       fetchReportsUseCase: getIt<FetchReportsUseCase>(),
+          blockHostelUseCase: getIt<BlockHostelUseCase>(),
           updateReportStatusUseCase: getIt<UpdateReportStatusUseCase>()
     ),
   );
