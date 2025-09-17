@@ -10,13 +10,14 @@ class UpdateReportStatusUseCase implements UseCase<bool, UpdateReportStatusParam
 
   @override
   Future<Either<Failure, bool>> call(UpdateReportStatusParams params) async {
-    return await repository.updateReportStatus(params.reportId, params.status);
+    return await repository.updateReportStatus(params.reportId, params.status, params.action);
   }
 }
 
 class UpdateReportStatusParams {
   final String reportId;
   final String status;
+  final String action;
 
-  UpdateReportStatusParams({required this.reportId, required this.status});
+  UpdateReportStatusParams({required this.reportId, required this.status, required this.action});
 }

@@ -36,7 +36,7 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
   Future<void> _onSubmitReport(SubmitReportEvent event, Emitter<ReportState> emit) async {
     emit(ReportLoading());
     final result = await updateReportStatusUseCase(
-      UpdateReportStatusParams(reportId: event.report.id!, status: 'resolved'),
+      UpdateReportStatusParams(reportId: event.report.id!, status: event.report.status, action: event.report.adminAction!),
     );
     emit(result.fold(
           (failure) => ReportError(message: failure.message),

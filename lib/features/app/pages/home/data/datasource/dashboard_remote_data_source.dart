@@ -24,7 +24,7 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
       for (var hostel in hostelQuery.docs) {
         final occupants = (hostel.data()['occupantsId'] as List<dynamic>?) ?? [];
         occupantsCount += occupants.length;
-        if (hostel.data()['status'] != 'approved') {
+        if (hostel.data()['status'] == 'blocked') {
           blockedHostelsCount++;
         }
       }

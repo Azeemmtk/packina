@@ -18,7 +18,7 @@ class ReviewDetailsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(padding),
+      padding: EdgeInsets.all(10),
       child: Builder(
         builder: (blocContext) => BlocConsumer<ReviewBloc, ReviewState>(
           listener: (context, state) {

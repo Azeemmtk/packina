@@ -21,7 +21,7 @@ class CustomMyHostelCard extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String location;
-  final int rent;
+  final double rent;
   final double rating;
   final int distance;
   final Status status;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:packina/app_state.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:packina/core/widgets/custom_snack_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../../../core/constants/colors.dart';
 import '../../../../../../../core/constants/const.dart';
@@ -34,7 +35,7 @@ class ContactReachWidget extends StatelessWidget {
             await ownerResult.fold(
                   (failure) async {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('1${failure.message}')),
+                  customSnackBar(text: failure.message)
                 );
               },
                   (ownerDetails) async {
@@ -42,7 +43,7 @@ class ContactReachWidget extends StatelessWidget {
                 final chatResult = await createChatUseCase(CreateChatParams(userId: hostel.ownerId));
                 chatResult.fold(
                       (failure) => ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('2${failure.message}')),
+                    customSnackBar(text: failure.message)
                   ),
                       (chatId) {
                     Navigator.push(
@@ -97,7 +98,7 @@ class ContactReachWidget extends StatelessWidget {
   }) {
     return Container(
       width: width * 0.3 - 3,
-      height: height * 0.2,
+      height:kIsWeb ? height * 0.2 : height * 0.12,
       decoration: BoxDecoration(
         color: textFieldColor,
         borderRadius: BorderRadius.circular(15),

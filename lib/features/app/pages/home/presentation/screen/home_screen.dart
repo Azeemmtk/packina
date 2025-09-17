@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:packina/core/di/injection.dart';
 import 'package:packina/core/widgets/custom_green_button_widget.dart';
 import 'package:packina/core/constants/const.dart';
-import 'package:packina/features/app/pages/home/presentation/widgets/build_status_card.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:packina/features/app/pages/home/presentation/widgets/home_custom_appbar_widget.dart';
 import 'package:packina/features/app/pages/manage_hostel/presentation/screens/hostel_screen.dart';
 import 'package:packina/features/app/pages/manage_report/presentation/screens/report_screen.dart';
@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: PreferredSize(
-          preferredSize: Size(double.infinity, height * 0.28),
+          preferredSize: Size(double.infinity, kIsWeb ? height * 0.28 : height * 0.2),
           child: HomeCustomAppbarWidget(),
         ),
         body: RefreshIndicator(

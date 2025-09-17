@@ -2,9 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:packina/core/utils/firebase_option.dart';
-import 'package:packina/features/app/pages/home/presentation/screen/home_screen.dart';
 import 'package:packina/features/app/pages/manage_hostel/presentation/provider/bloc/hostel_bloc.dart';
-import 'package:packina/features/app/pages/manage_hostel/presentation/screens/hostel_screen.dart';
+import 'package:packina/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:packina/features/auth/presentation/screens/splash_screen.dart';
 import 'core/constants/const.dart';
 import 'core/di/injection.dart';
@@ -34,7 +33,7 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.light,
-        home: HomeScreen(),
+        home: SplashScreen(),
       ),
     );
   }

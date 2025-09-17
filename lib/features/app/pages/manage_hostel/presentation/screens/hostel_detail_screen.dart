@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:packina/core/utils/enums.dart';
+import 'package:packina/core/widgets/custom_snack_bar.dart';
 import 'package:packina/features/app/pages/manage_hostel/domain/entity/hostel_entity.dart';
 import 'package:packina/features/app/pages/manage_hostel/presentation/provider/bloc/hostel_bloc.dart';
 import '../../../../../../core/constants/colors.dart';
@@ -38,14 +39,14 @@ class HostelDetailScreen extends StatelessWidget {
     await ownerResult.fold(
           (failure) async {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error fetching owner details: ${failure.message}')),
+          customSnackBar(text: 'Error fetching owner details: ${failure.message}')
         );
       },
           (ownerDetails) async {
         final chatResult = await createChatUseCase(CreateChatParams(userId: hostel.ownerId));
         chatResult.fold(
               (failure) => ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error creating chat: ${failure.message}')),
+            customSnackBar(text: 'Error creating chat: ${failure.message}')
           ),
               (chatId) {
             Navigator.push(
@@ -74,18 +75,18 @@ class HostelDetailScreen extends StatelessWidget {
           context.read<HostelBloc>().add(FetchHostelsData());
           _navigateToChat(context, 'Your hostel has been approved');
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Hostel approved successfully')),
+            customSnackBar(text: 'Hostel approved successfully')
           );
         } else if (state is HostelRejected && state.hostelId == hostel.id) {
           // Do not pop the screen; instead, navigate to chat
           context.read<HostelBloc>().add(FetchHostelsData());
           _navigateToChat(context, 'Your hostel has been rejected due to');
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Hostel rejected successfully')),
+            customSnackBar(text: 'Hostel rejected successfully')
           );
         } else if (state is HostelError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
+            customSnackBar(text: state.message)
           );
         }
       },

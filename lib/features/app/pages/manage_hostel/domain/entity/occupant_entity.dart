@@ -13,7 +13,7 @@ class OccupantEntity extends Equatable {
   final String? addressProofUrl;
   final String? idProofUrl;
   final String? profileImageUrl;
-  final String? guardian;
+  final Map<String, dynamic>? guardian;
   final String? adminAction;
 
   const OccupantEntity({

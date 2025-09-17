@@ -73,7 +73,7 @@ class ReportCardWidget extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 16.0),
+            const SizedBox(width: 10),
 
             // Right side: Action Buttons
             ReportActionButtons(report: report),

@@ -25,9 +25,9 @@ class ReportRepositoryImpl implements ReportRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> updateReportStatus(String reportId, String status) async {
+  Future<Either<Failure, bool>> updateReportStatus(String reportId, String status, String action) async {
     try {
-      final success = await dataSource.updateReportStatus(reportId, status);
+      final success = await dataSource.updateReportStatus(reportId, status, action);
       return Right(success);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));

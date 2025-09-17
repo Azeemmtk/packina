@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:packina/core/widgets/custom_snack_bar.dart';
 import '../../../../../../core/di/injection.dart';
 import '../../../../../../core/widgets/custom_green_button_widget.dart';
 import '../../../chat/domain/usecases/create_chat_use_case.dart';
@@ -36,7 +37,7 @@ class ReportActionButtons extends StatelessWidget {
               await ownerResult.fold(
                     (failure) async {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed: ${failure.message}')),
+                    customSnackBar(text: 'Failed: ${failure.message}', color: Colors.red)
                   );
                 },
                     (ownerDetails) async {
@@ -45,7 +46,7 @@ class ReportActionButtons extends StatelessWidget {
                   );
                   chatResult.fold(
                         (failure) => ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed: ${failure.message}')),
+                      customSnackBar(text: 'Failed: ${failure.message}', color: Colors.red)
                     ),
                         (chatId) {
                       Navigator.push(
@@ -82,7 +83,7 @@ class ReportActionButtons extends StatelessWidget {
               await occupantResult.fold(
                     (failure) async {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed: ${failure.message}')),
+                    customSnackBar(text: 'Failed: ${failure.message}')
                   );
                 },
                     (occupantDetails) async {
@@ -91,7 +92,7 @@ class ReportActionButtons extends StatelessWidget {
                   );
                   chatResult.fold(
                         (failure) => ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed: ${failure.message}')),
+                      customSnackBar(text: 'Failed: ${failure.message}')
                     ),
                         (chatId) {
                       Navigator.push(
@@ -112,7 +113,7 @@ class ReportActionButtons extends StatelessWidget {
           ),
 
           // Mark as Resolved
-          if (report.status == 'pending')
+          if (report.status != 'resolved')
             Padding(
               padding: const EdgeInsets.only(top: 12.0),
               child: CustomGreenButtonWidget(
@@ -127,7 +128,7 @@ class ReportActionButtons extends StatelessWidget {
                     ownerId: report.ownerId,
                     createdAt: report.createdAt,
                     status: 'resolved',
-                    adminAction: 'Marked as resolved on ${DateTime.now()}',
+                    adminAction: 'Resolved on ${DateTime.now()}',
                   );
                   context.read<ReportBloc>().add(
                     SubmitReportEvent(report: updatedReport),
@@ -135,7 +136,6 @@ class ReportActionButtons extends StatelessWidget {
                 },
               ),
             ),
-
           // Block Hostel
           Padding(
             padding: const EdgeInsets.only(top: 12.0),
@@ -144,6 +144,21 @@ class ReportActionButtons extends StatelessWidget {
               onPressed: () {
                 context.read<ReportBloc>().add(
                   BlockHostelEvent(hostelId: report.hostelId),
+                );
+
+                final updatedReport = ReportEntity(
+                  id: report.id,
+                  message: report.message,
+                  imageUrl: report.imageUrl,
+                  senderId: report.senderId,
+                  hostelId: report.hostelId,
+                  ownerId: report.ownerId,
+                  createdAt: report.createdAt,
+                  status: 'blocked',
+                  adminAction: 'Blocked on ${DateTime.now()}',
+                );
+                context.read<ReportBloc>().add(
+                  SubmitReportEvent(report: updatedReport),
                 );
               },
             ),

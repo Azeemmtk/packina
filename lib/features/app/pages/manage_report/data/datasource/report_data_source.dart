@@ -4,7 +4,7 @@ import '../../domain/entity/report_entity.dart';
 
 abstract class ReportDataSource {
   Future<List<ReportEntity>> fetchReports();
-  Future<bool> updateReportStatus(String reportId, String status);
+  Future<bool> updateReportStatus(String reportId, String status, String action);
   Future<bool> blockHostel(String hostelId);
 }
 
@@ -22,11 +22,11 @@ class ReportDataSourceImpl implements ReportDataSource {
   }
 
   @override
-  Future<bool> updateReportStatus(String reportId, String status) async {
+  Future<bool> updateReportStatus(String reportId, String status, String action) async {
     try {
       await firestore.collection('reports').doc(reportId).update({
         'status': status,
-        'adminAction': 'Marked as resolved on ${DateTime.now()}',
+        'adminAction': action,
       });
       return true;
     } catch (e) {

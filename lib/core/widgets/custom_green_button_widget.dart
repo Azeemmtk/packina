@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../constants/colors.dart';
-import '../constants/const.dart';
 
 class CustomGreenButtonWidget extends StatelessWidget {
   final String name;
@@ -44,7 +43,7 @@ class CustomGreenButtonWidget extends StatelessWidget {
             : Text(
           name,
           style: TextStyle(
-            fontSize: 20,
+            fontSize: kIsWeb ? 20 : 12,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
