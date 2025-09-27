@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../../../../core/constants/colors.dart';
 import '../../../../../../../core/constants/const.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class PreviewImageContainerWidget extends StatelessWidget {
   final String? imageUrl;
@@ -13,7 +12,7 @@ class PreviewImageContainerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: width * 0.3 - 3,
-      height: kIsWeb ? height * 0.4 : height * 0.15,
+      height: width > 600 ? height * 0.4 : height * 0.15,
       decoration: BoxDecoration(
         color: textFieldColor,
         borderRadius: BorderRadius.circular(15),
@@ -42,7 +41,7 @@ class PreviewImageContainerWidget extends StatelessWidget {
               direction: ShimmerDirection.ltr,
               child: Container(
                 width: width * 0.3 - 3,
-                height: kIsWeb ? height * 0.3 : height * 0.15,
+                height: width > 600 ? height * 0.3 : height * 0.15,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15),

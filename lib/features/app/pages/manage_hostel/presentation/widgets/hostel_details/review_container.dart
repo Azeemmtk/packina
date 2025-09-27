@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../../../../core/constants/const.dart';
 import '../../../domain/entity/review_entity.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
 
 class ReviewContainer extends StatelessWidget {
   final ReviewEntity review;
@@ -23,12 +25,14 @@ class ReviewContainer extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundImage:
-                review.userImageUrl != null ? NetworkImage(review.userImageUrl!) : null,
+                backgroundImage: review.userImageUrl != null
+                    ? CachedNetworkImageProvider(review.userImageUrl!)
+                    : null,
                 child: review.userImageUrl == null
                     ? const Icon(Icons.person, size: 20)
                     : null,
               ),
+
               const SizedBox(width: 10),
               Expanded(
                 child: Column(

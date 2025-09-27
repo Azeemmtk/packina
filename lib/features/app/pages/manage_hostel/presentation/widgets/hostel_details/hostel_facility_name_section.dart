@@ -4,7 +4,6 @@ import 'package:packina/features/app/pages/manage_hostel/domain/entity/hostel_en
 import 'package:shimmer/shimmer.dart';
 import '../../../../../../../core/constants/colors.dart';
 import '../../../../../../../core/constants/const.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'facility_container.dart';
 
 class HostelFacilityNameSection extends StatelessWidget {
@@ -22,7 +21,7 @@ class HostelFacilityNameSection extends StatelessWidget {
           child: Image.network(
             hostel.mainImageUrl ?? imagePlaceHolder,
             width: double.infinity,
-            height: kIsWeb? height * 0.6 :height * 0.3,
+            height: width > 600 ? height * 0.6 :height * 0.3,
             fit: BoxFit.cover,
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) {

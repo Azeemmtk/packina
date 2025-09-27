@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:packina/core/constants/colors.dart';
 
 class SplashTextWidget extends StatelessWidget {
   final AnimationController controller;
@@ -26,7 +27,7 @@ class SplashTextWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
-                color: Colors.white.withOpacity(0.1),
+                color: mainColor.withOpacity(0.1),
                 border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
               ),
               child: Text(
@@ -34,8 +35,15 @@ class SplashTextWidget extends StatelessWidget {
                 style: GoogleFonts.zenDots(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: mainColor,
                   letterSpacing: 2,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withOpacity(0.5),
+                      offset: const Offset(2, 2),
+                      blurRadius: 2,
+                    ),
+                  ],
                 ),
               ),
             ),

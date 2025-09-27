@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:packina/core/widgets/custom_snack_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../../../core/constants/colors.dart';
@@ -98,7 +97,7 @@ class ContactReachWidget extends StatelessWidget {
   }) {
     return Container(
       width: width * 0.3 - 3,
-      height:kIsWeb ? height * 0.2 : height * 0.12,
+      height:width > 600 ? height * 0.2 : height * 0.12,
       decoration: BoxDecoration(
         color: textFieldColor,
         borderRadius: BorderRadius.circular(15),

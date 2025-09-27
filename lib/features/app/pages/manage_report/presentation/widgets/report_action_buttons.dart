@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:packina/core/constants/const.dart';
 import 'package:packina/core/widgets/custom_snack_bar.dart';
 import '../../../../../../core/di/injection.dart';
-import '../../../../../../core/widgets/custom_green_button_widget.dart';
 import '../../../chat/domain/usecases/create_chat_use_case.dart';
 import '../../../chat/domain/usecases/get_owner_details_use_case.dart';
 import '../../../chat/presentation/screens/individual_chat_screen.dart';
@@ -16,14 +16,11 @@ class ReportActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Chat with Owner
-          CustomGreenButtonWidget(
-            name: 'Chat with Owner',
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Chat with Owner
+        ElevatedButton(
             onPressed: () async {
               final createChatUseCase = getIt<CreateChatUseCase>();
               final getOwnerDetailUseCase = getIt<GetOwnerDetailsUseCase>();
@@ -35,20 +32,20 @@ class ReportActionButtons extends StatelessWidget {
                 ),
               );
               await ownerResult.fold(
-                    (failure) async {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    customSnackBar(text: 'Failed: ${failure.message}', color: Colors.red)
-                  );
+                (failure) async {
+                  ScaffoldMessenger.of(context).showSnackBar(customSnackBar(
+                      text: 'Failed: ${failure.message}', color: Colors.red));
                 },
-                    (ownerDetails) async {
+                (ownerDetails) async {
                   final chatResult = await createChatUseCase(
                     CreateChatParams(userId: report.ownerId),
                   );
                   chatResult.fold(
-                        (failure) => ScaffoldMessenger.of(context).showSnackBar(
-                      customSnackBar(text: 'Failed: ${failure.message}', color: Colors.red)
-                    ),
-                        (chatId) {
+                    (failure) => ScaffoldMessenger.of(context).showSnackBar(
+                        customSnackBar(
+                            text: 'Failed: ${failure.message}',
+                            color: Colors.red)),
+                    (chatId) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -64,12 +61,10 @@ class ReportActionButtons extends StatelessWidget {
                 },
               );
             },
-          ),
-          const SizedBox(height: 12.0),
-
-          // Chat with Occupant
-          CustomGreenButtonWidget(
-            name: 'Chat with Occupant',
+            child: Text('Chat with Owner')),
+        width10,
+        // Chat with Occupant
+        ElevatedButton(
             onPressed: () async {
               final createChatUseCase = getIt<CreateChatUseCase>();
               final getOwnerDetailUseCase = getIt<GetOwnerDetailsUseCase>();
@@ -81,20 +76,19 @@ class ReportActionButtons extends StatelessWidget {
                 ),
               );
               await occupantResult.fold(
-                    (failure) async {
+                (failure) async {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    customSnackBar(text: 'Failed: ${failure.message}')
-                  );
+                      customSnackBar(text: 'Failed: ${failure.message}'));
                 },
-                    (occupantDetails) async {
+                (occupantDetails) async {
                   final chatResult = await createChatUseCase(
-                    CreateChatParams(userId: report.senderId, collection: 'users'),
+                    CreateChatParams(
+                        userId: report.senderId, collection: 'users'),
                   );
                   chatResult.fold(
-                        (failure) => ScaffoldMessenger.of(context).showSnackBar(
-                      customSnackBar(text: 'Failed: ${failure.message}')
-                    ),
-                        (chatId) {
+                    (failure) => ScaffoldMessenger.of(context).showSnackBar(
+                        customSnackBar(text: 'Failed: ${failure.message}')),
+                    (chatId) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -110,42 +104,12 @@ class ReportActionButtons extends StatelessWidget {
                 },
               );
             },
-          ),
-
-          // Mark as Resolved
-          if (report.status != 'resolved')
-            Padding(
-              padding: const EdgeInsets.only(top: 12.0),
-              child: CustomGreenButtonWidget(
-                name: 'Mark as Resolved',
-                onPressed: () {
-                  final updatedReport = ReportEntity(
-                    id: report.id,
-                    message: report.message,
-                    imageUrl: report.imageUrl,
-                    senderId: report.senderId,
-                    hostelId: report.hostelId,
-                    ownerId: report.ownerId,
-                    createdAt: report.createdAt,
-                    status: 'resolved',
-                    adminAction: 'Resolved on ${DateTime.now()}',
-                  );
-                  context.read<ReportBloc>().add(
-                    SubmitReportEvent(report: updatedReport),
-                  );
-                },
-              ),
-            ),
-          // Block Hostel
-          Padding(
-            padding: const EdgeInsets.only(top: 12.0),
-            child: CustomGreenButtonWidget(
-              name: 'Block Hostel',
+            child: Text('Chat with Ocuupant')),
+        width10,
+        // Mark as Resolved
+        if (report.status != 'resolved')
+          ElevatedButton(
               onPressed: () {
-                context.read<ReportBloc>().add(
-                  BlockHostelEvent(hostelId: report.hostelId),
-                );
-
                 final updatedReport = ReportEntity(
                   id: report.id,
                   message: report.message,
@@ -154,17 +118,40 @@ class ReportActionButtons extends StatelessWidget {
                   hostelId: report.hostelId,
                   ownerId: report.ownerId,
                   createdAt: report.createdAt,
-                  status: 'blocked',
-                  adminAction: 'Blocked on ${DateTime.now()}',
+                  status: 'resolved',
+                  adminAction: 'Resolved on ${DateTime.now()}',
                 );
                 context.read<ReportBloc>().add(
-                  SubmitReportEvent(report: updatedReport),
-                );
+                      SubmitReportEvent(report: updatedReport),
+                    );
               },
-            ),
-          ),
-        ],
-      ),
+              child: Text('Mark as resolved')),
+
+        width10,
+        //block hostel
+        ElevatedButton(
+            onPressed: () {
+              context.read<ReportBloc>().add(
+                    BlockHostelEvent(hostelId: report.hostelId),
+                  );
+
+              final updatedReport = ReportEntity(
+                id: report.id,
+                message: report.message,
+                imageUrl: report.imageUrl,
+                senderId: report.senderId,
+                hostelId: report.hostelId,
+                ownerId: report.ownerId,
+                createdAt: report.createdAt,
+                status: 'blocked',
+                adminAction: 'Blocked on ${DateTime.now()}',
+              );
+              context.read<ReportBloc>().add(
+                    SubmitReportEvent(report: updatedReport),
+                  );
+            },
+            child: Text('Block hostel')),
+      ],
     );
   }
 }

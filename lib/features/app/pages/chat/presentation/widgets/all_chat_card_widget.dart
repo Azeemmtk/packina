@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../../../core/constants/colors.dart';
 import '../../../../../../core/constants/const.dart';
 import '../../domain/entity/chat_entity.dart';
@@ -23,6 +23,7 @@ class AllChatCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(otherPhoto);
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -42,15 +43,15 @@ class AllChatCardWidget extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 23,
-              backgroundImage: otherPhoto.isNotEmpty
-                  ? NetworkImage(otherPhoto)
-                  : null,
+              backgroundImage: CachedNetworkImageProvider(otherPhoto),
               child: otherPhoto.isEmpty
                   ? Text(
                 otherName.isNotEmpty ? otherName[0] : 'U',
                 style: const TextStyle(fontSize: 18),
               )
                   : null,
+              onBackgroundImageError: (_, __) {
+              },
             ),
             width10,
             Expanded(

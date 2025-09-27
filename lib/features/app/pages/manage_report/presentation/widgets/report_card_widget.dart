@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:packina/core/constants/colors.dart';
 import 'package:packina/features/app/pages/manage_report/presentation/widgets/report_action_buttons.dart';
 import '../../domain/entity/report_entity.dart';
 
@@ -10,21 +11,29 @@ class ReportCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 4.0,
+      color: report.status == 'pending'
+          ? Color(0xFFFCFAE4)
+          : report.status == 'resolved'
+            ? Color(0xFFE1FFE6)
+            : Color(0xFFFCD6D4)
+      ,
+      // elevation: 4.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Left side: Report details
-            Expanded(
-              child: Column(
+
+            IntrinsicHeight(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
                   if (report.imageUrl != null)
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
@@ -35,47 +44,73 @@ class ReportCardWidget extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     ),
-                  if (report.imageUrl != null) const SizedBox(height: 12.0),
-                  Text(
-                    'Message:',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4.0),
-                  Text(report.message, style: Theme.of(context).textTheme.bodyMedium),
-                  const SizedBox(height: 12.0),
-                  Text(
-                    'Status:',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4.0),
-                  Text(report.status, style: Theme.of(context).textTheme.bodyMedium),
-                  if (report.adminAction != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Admin Action:',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
+                  const SizedBox(width: 10),
+                  // Right side: Report details
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (report.imageUrl != null) const SizedBox(height: 12.0),
+                        Text(
+                          'Message:',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4.0),
+                        Text(
+                          report.message,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const SizedBox(height: 12.0),
+                        Text(
+                          'Status:',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4.0),
+                        Text(
+                          report.status,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: report.status == 'pending'
+                                ? Colors.orange
+                                : report.status == 'resolved'
+                                  ? mainColor
+                                  : Colors.red,
+                          ),
+                        ),
+                        if (report.adminAction != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Admin Action:',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 4.0),
+                                Text(
+                                  report.adminAction!,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 4.0),
-                          Text(report.adminAction!, style: Theme.of(context).textTheme.bodyMedium),
-                        ],
-                      ),
+                      ],
                     ),
+                  ),
                 ],
               ),
             ),
-            const SizedBox(width: 10),
-
-            // Right side: Action Buttons
+            const SizedBox(height: 16.0),
             ReportActionButtons(report: report),
           ],
         ),

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:packina/core/constants/const.dart';
 import 'package:packina/features/app/pages/home/presentation/screen/home_screen.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../../../core/widgets/custom_green_button_widget.dart';
 import '../provider/cubit/sign_in_cubit.dart';
 import '../widgets/curved_container_widget.dart';
@@ -16,35 +16,46 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     return BlocProvider(
       create: (context) => SignInCubit(),
       child: Scaffold(
-        backgroundColor: Color(0xFFE5F6F4),
+        backgroundColor: const Color(0xFFE5F6F4),
         body: SingleChildScrollView(
           child: Center(
-            child: kIsWeb
+            child: width > 600
                 ? Padding(
-              padding: EdgeInsets.symmetric(horizontal: 300, vertical: 60),
+              padding:
+              const EdgeInsets.symmetric(horizontal: 300, vertical: 60),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: _buildSignInScreen(context),
+                child: _buildSignInScreen(context, width),
               ),
             )
-                : _buildSignInScreen(context),
+                : _buildSignInScreen(context, width),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildSignInScreen(BuildContext context) {
+  Widget _buildSignInScreen(BuildContext context, double screenWidth) {
+    // Adjust CurvedContainerWidget height based on screen width
+    const double mobileWidthThreshold = 600;
+    final double curvedContainerHeight =
+    screenWidth > mobileWidthThreshold ? 200 : 400;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CurvedContainerWidget(height: kIsWeb ? 200 : 400, title: 'Sign In'),
+        CurvedContainerWidget(
+          height: curvedContainerHeight,
+          title: 'Sign In',
+        ),
         Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(

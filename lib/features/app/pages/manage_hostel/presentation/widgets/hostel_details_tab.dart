@@ -10,6 +10,7 @@ import 'hostel_details/description_preview_section.dart';
 import 'hostel_details/hostel_facility_name_section.dart';
 import 'hostel_details/review_room_section.dart';
 import '../../../../../../core/di/injection.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HostelDetailsTab extends StatelessWidget {
   const HostelDetailsTab({
@@ -57,7 +58,7 @@ class HostelDetailsTab extends StatelessWidget {
                               return ListTile(
                                 leading: occupant.profileImageUrl != null
                                     ? CircleAvatar(
-                                  backgroundImage: NetworkImage(occupant.profileImageUrl!),
+                                  backgroundImage: CachedNetworkImageProvider(occupant.profileImageUrl!),
                                 )
                                     : CircleAvatar(child: Icon(Icons.person)),
                                 title: Text(occupant.name),
@@ -88,23 +89,27 @@ class HostelDetailsTab extends StatelessWidget {
                 ),
               ),
               height20,
-              CustomGreenButtonWidget(
-                name: 'Approve',
-                onPressed: () {
-                  if (hostel.status != Status.approved) {
-                    context.read<HostelBloc>().add(HostelApprove(hostel.id));
-                  }
-                },
+              Center(
+                child: CustomGreenButtonWidget(
+                  name: 'Approve',
+                  onPressed: () {
+                    if (hostel.status != Status.approved) {
+                      context.read<HostelBloc>().add(HostelApprove(hostel.id));
+                    }
+                  },
+                ),
               ),
               height20,
-              CustomGreenButtonWidget(
-                name: 'Reject',
-                color: Colors.redAccent,
-                onPressed: () {
-                  if (hostel.status != Status.rejected) {
-                    context.read<HostelBloc>().add(HostelReject(hostel.id));
-                  }
-                },
+              Center(
+                child: CustomGreenButtonWidget(
+                  name: 'Reject',
+                  color: Colors.redAccent,
+                  onPressed: () {
+                    if (hostel.status != Status.rejected) {
+                      context.read<HostelBloc>().add(HostelReject(hostel.id));
+                    }
+                  },
+                ),
               ),
             ],
           ),
